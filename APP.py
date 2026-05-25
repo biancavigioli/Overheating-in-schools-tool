@@ -195,9 +195,77 @@ st.write("Loading...")
 st.write("Estimated time: 20 sec")
 
 # Folder
-folder = os.path.dirname(os.path.abspath(sys.argv[0]))
+import requests
 
-temp_df_tot = pd.read_excel(folder + r"\RISULTATI-base\Temperatures-{}-{}.xlsx".format(city, floor))
+# ── Zenodo settings ──────────────────────────────────────────────────────────
+ZENODO_URLS = {
+    "RISULTATI-base-Corner": "https://zenodo.org/records/20383572/files",
+    "RISULTATI-base-Middle": "https://zenodo.org/records/20383687/files",
+    "RISULTATI-sh00":        "https://zenodo.org/records/20383413/files",
+    "RISULTATI-sh45":        "https://zenodo.org/records/20383335/files",
+    "RISULTATI-night":       "https://zenodo.org/records/20383207/files",
+    "RISULTATI-2050":        "https://zenodo.org/records/20383514/files",
+    "RISULTATI-2080":        "https://zenodo.org/records/20383502/files",
+    "RISULTATI-UHI":         "https://zenodo.org/records/20383532/files",
+}
+
+CACHE_DIR = os.path.join(os.path.expanduser("~"), ".streamlit_cache", "scuole_results")
+os.makedirs(CACHE_DIR, exist_ok=True)
+
+def get_folder_key(base_folder, floor):
+    """For RISULTATI-base, pick Corner or Middle record based on floor position."""
+    if base_folder == "RISULTATI-base":
+        position = floor.split("-")[1]  # extracts "C" or "M" from e.g. "G-C"
+        return f"RISULTATI-base-{('Corner' if position == 'C' else 'Middle')}"
+    return base_folder
+
+def get_file(folder, filename):
+    folder_key = get_folder_key(folder, floor)  # floor is already defined from user input
+    local_path = os.path.join(CACHE_DIR, folder_key, filename)
+    if not os.path.exists(local_path):
+        os.makedirs(os.path.dirname(local_path), exist_ok=True)
+        url = f"{ZENODO_URLS[folder_key]}/{filename}?download=1"
+        st.toast(f"Downloading {filename}...")
+        r = requests.get(url, timeout=60)
+        if r.status_code != 200:
+            st.error(f"Could not download {filename} (error {r.status_code}). Check your Zenodo record.")
+            st.stop()
+        with open(local_path, "wb") as f:
+            f.write(r.content)
+    return local_path
+
+
+# ── Load data ────────────────────────────────────────────────────────────────
+folder = "local"  # kept as a placeholder, no longer used for paths
+temp_df_tot        = pd.read_excel(get_file("RISULTATI-base",  f"Temperatures-{city}-{floor}.xlsx"))
+scenarios_df_tot   = pd.read_excel(get_file("RISULTATI-base",  f"Scenarios-{city}-{floor}.xlsx"))
+dist_df_tot        = pd.read_excel(get_file("RISULTATI-base",  f"Dist-{city}-{floor}.xlsx"))
+
+temp_df_sh00       = pd.read_excel(get_file("RISULTATI-sh00",  f"Temperatures-{city}-{floor}.xlsx"))
+scenarios_df_sh00  = pd.read_excel(get_file("RISULTATI-sh00",  f"Scenarios-{city}-{floor}.xlsx"))
+dist_df_sh00       = pd.read_excel(get_file("RISULTATI-sh00",  f"Dist-{city}-{floor}.xlsx"))
+
+temp_df_sh45       = pd.read_excel(get_file("RISULTATI-sh45",  f"Temperatures-{city}-{floor}.xlsx"))
+scenarios_df_sh45  = pd.read_excel(get_file("RISULTATI-sh45",  f"Scenarios-{city}-{floor}.xlsx"))
+dist_df_sh45       = pd.read_excel(get_file("RISULTATI-sh45",  f"Dist-{city}-{floor}.xlsx"))
+
+temp_df_night      = pd.read_excel(get_file("RISULTATI-night", f"Temperatures-{city}-{floor}.xlsx"))
+scenarios_df_night = pd.read_excel(get_file("RISULTATI-night", f"Scenarios-{city}-{floor}.xlsx"))
+dist_df_night      = pd.read_excel(get_file("RISULTATI-night", f"Dist-{city}-{floor}.xlsx"))
+
+temp_df_2050       = pd.read_excel(get_file("RISULTATI-2050", f"Temperatures-{city}-{floor}-2050.xlsx"))
+scenarios_df_2050  = pd.read_excel(get_file("RISULTATI-2050", f"Scenarios-{city}-{floor}-2050.xlsx"))
+dist_df_2050       = pd.read_excel(get_file("RISULTATI-2050", f"Dist-{city}-{floor}-2050.xlsx"))
+
+temp_df_2080       = pd.read_excel(get_file("RISULTATI-2080", f"Temperatures-{city}-{floor}-2080.xlsx"))
+scenarios_df_2080  = pd.read_excel(get_file("RISULTATI-2080", f"Scenarios-{city}-{floor}-2080.xlsx"))
+dist_df_2080       = pd.read_excel(get_file("RISULTATI-2080", f"Dist-{city}-{floor}-2080.xlsx"))
+
+temp_df_UHI        = pd.read_excel(get_file("RISULTATI-UHI",  f"Temperatures-{city}-{floor}-UHI.xlsx"))
+scenarios_df_UHI   = pd.read_excel(get_file("RISULTATI-UHI",  f"Scenarios-{city}-{floor}-UHI.xlsx"))
+dist_df_UHI        = pd.read_excel(get_file("RISULTATI-UHI",  f"Dist-{city}-{floor}-UHI.xlsx"))
+
+# ── Base data ────────────────────────────────────────────────────────────────
 temp_df_tot['ts'] = pd.Timestamp('2025-01-01 00:00:00') + pd.to_timedelta(temp_df_tot.index, unit='h')
 temp_df_tot["Month"] = temp_df_tot["ts"].dt.month
 temp_df_tot["Day"] = temp_df_tot["ts"].dt.day
@@ -216,10 +284,7 @@ elif "-{}, {}, {}, {}, {}.0, {}.0, {}".format(city, floor, vent, retrofit, WFR, 
 
 temp_df = pd.concat([temp_df_tot[caso], temp_df_tot["Trm-{}".format(city)], temp_df_tot["Tmax-{}".format(city)], temp_df_tot["TmaxVent-{}".format(city)], temp_df_tot["Tout-{}".format(city)], temp_df_tot["Month"], temp_df_tot["Day"], temp_df_tot["Day"], temp_df_tot["Weekday"], temp_df_tot["Hour"]], axis=1)
 
-scenarios_df_tot = pd.read_excel(folder + r"\RISULTATI-base\Scenarios-{}-{}.xlsx".format(city, floor))
 scenarios_df = scenarios_df_tot[(scenarios_df_tot["window_to_floor_ratio"] == WFR/100) & (scenarios_df_tot["building_orientation"] == orient) & (scenarios_df_tot["solar_heat_gain_coefficient"] == SHGC) & (scenarios_df_tot["THERMAL"] == retrofit) & (scenarios_df_tot["VENT"] == vent)]
-
-dist_df_tot = pd.read_excel(folder + r"\RISULTATI-base\Dist-{}-{}.xlsx".format(city, floor))
 
 if "-{}, {}, {}, {}, {}, {}, {}".format(city, floor, vent, retrofit, WFR, orient, SHGC) in dist_df_tot["Unnamed: 0"].values:
     casoDist = "-{}, {}, {}, {}, {}, {}, {}".format(city, floor, vent, retrofit, WFR, orient, SHGC)
@@ -1712,7 +1777,6 @@ else:
     WFR = 22
 
 # Shading 00
-temp_df_sh00 = pd.read_excel(folder + r"\RISULTATI-sh00\Temperatures-{}-{}.xlsx".format(city, floor))
 temp_df_sh00['ts'] = pd.Timestamp('2025-01-01 00:00:00') + pd.to_timedelta(temp_df_sh00.index, unit='h')
 temp_df_sh00["Month"] = temp_df_sh00["ts"].dt.month
 temp_df_sh00["Day"] = temp_df_sh00["ts"].dt.day
@@ -1731,10 +1795,7 @@ elif "-{}, {}, {}, {}, {}.0, {}.0, {}".format(city, floor, vent, retrofit, WFR, 
 
 temp_sh00 = pd.DataFrame(temp_df_sh00[caso])
 
-scenarios_df_sh00 = pd.read_excel(folder + r"\RISULTATI-sh00\Scenarios-{}-{}.xlsx".format(city, floor))
 scenarios_sh00 = scenarios_df_sh00[(scenarios_df_sh00["window_to_floor_ratio"] == WFR/100) & (scenarios_df_sh00["building_orientation"] == orient) & (scenarios_df_sh00["solar_heat_gain_coefficient"] == SHGC) & (scenarios_df_sh00["THERMAL"] == retrofit) & (scenarios_df_sh00["VENT"] == vent)]
-
-dist_df_sh00 = pd.read_excel(folder + r"\RISULTATI-sh00\Dist-{}-{}.xlsx".format(city, floor))
 
 if "-{}, {}, {}, {}, {}, {}, {}".format(city, floor, vent, retrofit, WFR, orient, SHGC) in dist_df_sh00["Unnamed: 0"].values:
     casoDist = "-{}, {}, {}, {}, {}, {}, {}".format(city, floor, vent, retrofit, WFR, orient, SHGC)
@@ -1748,7 +1809,6 @@ elif "-{}, {}, {}, {}, {}.0, {}.0, {}".format(city, floor, vent, retrofit, WFR, 
 dist_df_compare = pd.concat([dist_df_compare, dist_df_sh00[dist_df_sh00["Unnamed: 0"] == casoDist]]) #, dist_df_sh00[dist_df_sh00["Unnamed: 0"] == "{} VENT".format(casoDist)]])
 
 # Shading 45
-temp_df_sh45 = pd.read_excel(folder + r"\RISULTATI-sh45\Temperatures-{}-{}.xlsx".format(city, floor))
 temp_df_sh45['ts'] = pd.Timestamp('2025-01-01 00:00:00') + pd.to_timedelta(temp_df_sh45.index, unit='h')
 temp_df_sh45["Month"] = temp_df_sh45["ts"].dt.month
 temp_df_sh45["Day"] = temp_df_sh45["ts"].dt.day
@@ -1767,10 +1827,7 @@ elif "-{}, {}, {}, {}, {}.0, {}.0, {}".format(city, floor, vent, retrofit, WFR, 
 
 temp_sh45 = temp_df_sh45[caso]
 
-scenarios_df_sh45 = pd.read_excel(folder + r"\RISULTATI-sh45\Scenarios-{}-{}.xlsx".format(city, floor))
 scenarios_sh45 = scenarios_df_sh45[(scenarios_df_sh45["window_to_floor_ratio"] == WFR/100) & (scenarios_df_sh45["building_orientation"] == orient) & (scenarios_df_sh45["solar_heat_gain_coefficient"] == SHGC) & (scenarios_df_sh45["THERMAL"] == retrofit) & (scenarios_df_sh45["VENT"] == vent)]
-
-dist_df_sh45 = pd.read_excel(folder + r"\RISULTATI-sh45\Dist-{}-{}.xlsx".format(city, floor))
 
 if "-{}, {}, {}, {}, {}, {}, {}".format(city, floor, vent, retrofit, WFR, orient, SHGC) in dist_df_sh45["Unnamed: 0"].values:
     casoDist = "-{}, {}, {}, {}, {}, {}, {}".format(city, floor, vent, retrofit, WFR, orient, SHGC)
@@ -1784,7 +1841,6 @@ elif "-{}, {}, {}, {}, {}.0, {}.0, {}".format(city, floor, vent, retrofit, WFR, 
 dist_df_compare = pd.concat([dist_df_compare, dist_df_sh45[dist_df_sh45["Unnamed: 0"] == casoDist]]) #, dist_df_sh45[dist_df_sh45["Unnamed: 0"] == "{} VENT".format(casoDist)]])
 
 # Night vent
-temp_df_night = pd.read_excel(folder + r"\RISULTATI-night\Temperatures-{}-{}.xlsx".format(city, floor))
 temp_df_night['ts'] = pd.Timestamp('2025-01-01 00:00:00') + pd.to_timedelta(temp_df_night.index, unit='h')
 temp_df_night["Month"] = temp_df_night["ts"].dt.month
 temp_df_night["Day"] = temp_df_night["ts"].dt.day
@@ -1803,10 +1859,7 @@ elif "-{}, {}, {}, {}, {}.0, {}.0, {}".format(city, floor, vent, retrofit, WFR, 
 
 temp_night = temp_df_night[caso]
 
-scenarios_df_night = pd.read_excel(folder + r"\RISULTATI-night\Scenarios-{}-{}.xlsx".format(city, floor))
 scenarios_night = scenarios_df_night[(scenarios_df_night["window_to_floor_ratio"] == WFR/100) & (scenarios_df_night["building_orientation"] == orient) & (scenarios_df_night["solar_heat_gain_coefficient"] == SHGC) & (scenarios_df_night["THERMAL"] == retrofit) & (scenarios_df_night["VENT"] == vent)]
-
-dist_df_night = pd.read_excel(folder + r"\RISULTATI-night\Dist-{}-{}.xlsx".format(city, floor))
 
 if "-{}, {}, {}, {}, {}, {}, {}".format(city, floor, vent, retrofit, WFR, orient, SHGC) in dist_df_night["Unnamed: 0"].values:
     casoDist = "-{}, {}, {}, {}, {}, {}, {}".format(city, floor, vent, retrofit, WFR, orient, SHGC)
@@ -2465,7 +2518,6 @@ else:
 
 # Future 2050
 weather = "2050"
-temp_df_sh00 = pd.read_excel(folder + r"\RISULTATI-FWG\Temperatures-{}-{}-{}.xlsx".format(city, floor, weather))
 temp_df_sh00['ts'] = pd.Timestamp('2025-01-01 00:00:00') + pd.to_timedelta(temp_df_sh00.index, unit='h')
 temp_df_sh00["Month"] = temp_df_sh00["ts"].dt.month
 temp_df_sh00["Day"] = temp_df_sh00["ts"].dt.day
@@ -2484,10 +2536,7 @@ elif "-{}, {}, {}, {}, {}.0, {}.0, {}".format(city, floor, vent, retrofit, WFR, 
 
 temp_sh00 = pd.DataFrame(temp_df_sh00[caso])
 
-scenarios_df_sh00 = pd.read_excel(folder + r"\RISULTATI-FWG\Scenarios-{}-{}-{}.xlsx".format(city, floor, weather))
 scenarios_sh00 = scenarios_df_sh00[(scenarios_df_sh00["window_to_floor_ratio"] == WFR/100) & (scenarios_df_sh00["building_orientation"] == orient) & (scenarios_df_sh00["solar_heat_gain_coefficient"] == SHGC) & (scenarios_df_sh00["THERMAL"] == retrofit) & (scenarios_df_sh00["VENT"] == vent)]
-
-dist_df_sh00 = pd.read_excel(folder + r"\RISULTATI-FWG\Dist-{}-{}-{}.xlsx".format(city, floor, weather))
 
 if "-{}, {}, {}, {}, {}, {}, {}".format(city, floor, vent, retrofit, WFR, orient, SHGC) in dist_df_sh00["Unnamed: 0"].values:
     casoDist = "-{}, {}, {}, {}, {}, {}, {}".format(city, floor, vent, retrofit, WFR, orient, SHGC)
@@ -2502,7 +2551,6 @@ dist_df_compare = pd.concat([dist_df_compare, dist_df_sh00[dist_df_sh00["Unnamed
 
 # Future 2080
 weather = "2080"
-temp_df_sh45 = pd.read_excel(folder + r"\RISULTATI-FWG\Temperatures-{}-{}-{}.xlsx".format(city, floor, weather))
 temp_df_sh45['ts'] = pd.Timestamp('2025-01-01 00:00:00') + pd.to_timedelta(temp_df_sh45.index, unit='h')
 temp_df_sh45["Month"] = temp_df_sh45["ts"].dt.month
 temp_df_sh45["Day"] = temp_df_sh45["ts"].dt.day
@@ -2521,10 +2569,7 @@ elif "-{}, {}, {}, {}, {}.0, {}.0, {}".format(city, floor, vent, retrofit, WFR, 
 
 temp_sh45 = temp_df_sh45[caso]
 
-scenarios_df_sh45 = pd.read_excel(folder + r"\RISULTATI-FWG\Scenarios-{}-{}-{}.xlsx".format(city, floor, weather))
 scenarios_sh45 = scenarios_df_sh45[(scenarios_df_sh45["window_to_floor_ratio"] == WFR/100) & (scenarios_df_sh45["building_orientation"] == orient) & (scenarios_df_sh45["solar_heat_gain_coefficient"] == SHGC) & (scenarios_df_sh45["THERMAL"] == retrofit) & (scenarios_df_sh45["VENT"] == vent)]
-
-dist_df_sh45 = pd.read_excel(folder + r"\RISULTATI-FWG\Dist-{}-{}-{}.xlsx".format(city, floor, weather))
 
 if "-{}, {}, {}, {}, {}, {}, {}".format(city, floor, vent, retrofit, WFR, orient, SHGC) in dist_df_sh45["Unnamed: 0"].values:
     casoDist = "-{}, {}, {}, {}, {}, {}, {}".format(city, floor, vent, retrofit, WFR, orient, SHGC)
@@ -2539,7 +2584,6 @@ dist_df_compare = pd.concat([dist_df_compare, dist_df_sh45[dist_df_sh45["Unnamed
 
 # UHI
 weather = "UHI"
-temp_df_night = pd.read_excel(folder + r"\RISULTATI-FWG\Temperatures-{}-{}-{}.xlsx".format(city, floor, weather))
 temp_df_night['ts'] = pd.Timestamp('2025-01-01 00:00:00') + pd.to_timedelta(temp_df_night.index, unit='h')
 temp_df_night["Month"] = temp_df_night["ts"].dt.month
 temp_df_night["Day"] = temp_df_night["ts"].dt.day
@@ -2558,10 +2602,7 @@ elif "-{}, {}, {}, {}, {}.0, {}.0, {}".format(city, floor, vent, retrofit, WFR, 
 
 temp_night = temp_df_night[caso]
 
-scenarios_df_night = pd.read_excel(folder + r"\RISULTATI-FWG\Scenarios-{}-{}-{}.xlsx".format(city, floor, weather))
 scenarios_night = scenarios_df_night[(scenarios_df_night["window_to_floor_ratio"] == WFR/100) & (scenarios_df_night["building_orientation"] == orient) & (scenarios_df_night["solar_heat_gain_coefficient"] == SHGC) & (scenarios_df_night["THERMAL"] == retrofit) & (scenarios_df_night["VENT"] == vent)]
-
-dist_df_night = pd.read_excel(folder + r"\RISULTATI-FWG\Dist-{}-{}-{}.xlsx".format(city, floor, weather))
 
 if "-{}, {}, {}, {}, {}, {}, {}".format(city, floor, vent, retrofit, WFR, orient, SHGC) in dist_df_night["Unnamed: 0"].values:
     casoDist = "-{}, {}, {}, {}, {}, {}, {}".format(city, floor, vent, retrofit, WFR, orient, SHGC)
