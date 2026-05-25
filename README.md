@@ -33,8 +33,9 @@ The folder contains:
 
 # How to use
 To be able to use the tool, it is necessary to:
-1. Open the "command prompt" from your computer
-2. ## Install python and streamlit
+1. Download and install Python from python.org/downloads [During installation, check "Add Python to PATH"]
+2. Open the "command prompt" from your computer and run
+   "pip install streamlit numpy pandas matplotlib seaborn"
 
 To use the tool: 
 1. Download the full folder
