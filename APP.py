@@ -201,12 +201,12 @@ import requests
 ZENODO_URLS = {
     "RISULTATI-base-Corner": "https://zenodo.org/records/20383573/files",
     "RISULTATI-base-Middle": "https://zenodo.org/records/20383688/files",
-    "RISULTATI-sh00":        "https://zenodo.org/records/20383413/files",
-    "RISULTATI-sh45":        "https://zenodo.org/records/20383335/files",
-    "RISULTATI-night":       "https://zenodo.org/records/20383207/files",
-    "RISULTATI-2050":        "https://zenodo.org/records/20383514/files",
-    "RISULTATI-2080":        "https://zenodo.org/records/20383502/files",
-    "RISULTATI-UHI":         "https://zenodo.org/records/20383532/files",
+    "RISULTATI-sh00":        "https://zenodo.org/records/20383414/files",
+    "RISULTATI-sh45":        "https://zenodo.org/records/20383336/files",
+    "RISULTATI-night":       "https://zenodo.org/records/20383208/files",
+    "RISULTATI-2050":        "https://zenodo.org/records/20383515/files",
+    "RISULTATI-2080":        "https://zenodo.org/records/20383503/files",
+    "RISULTATI-UHI":         "https://zenodo.org/records/20383533/files",
 }
 
 CACHE_DIR = os.path.join(os.path.expanduser("~"), ".streamlit_cache", "scuole_results")
