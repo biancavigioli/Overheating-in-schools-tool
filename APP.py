@@ -1624,7 +1624,7 @@ for comparazione_numero in range(number):
                     heat_comparazione_updated.loc[day, comparazione] = 0
 
         share_updated = float(
-            heat_comparazione_updated.sum(axis=0).values) / 365 * 100
+            heat_comparazione_updated.sum(axis=0).values[0]) / 365 * 100
         # scenarios_df_compare["Overheating days share"][(scenarios_df_compare["solar_heat_gain_coefficient"] == SHGC_new) & (scenarios_df_compare["THERMAL"] == retrofit_new) & (scenarios_df_compare["VENT"] == vent_new)] = float(heat_comparazione_updated.sum(axis = 0).values) / 365 * 100
         
         numeroTOT = round(heat_comparazione_updated.sum(axis=0)[comparazione])
@@ -1687,7 +1687,7 @@ for comparazione_numero in range(number):
                     heat_comparazione_vent_updated.loc[day, comparazione] = 0
 
         share_updated = float(
-            heat_comparazione_vent_updated.sum(axis=0).values) / 365 * 100
+            heat_comparazione_vent_updated.sum(axis=0).values[0]) / 365 * 100
         # scenarios_df_compare["Overheating days share with increased air speed"][(scenarios_df_compare["solar_heat_gain_coefficient"] == SHGC_new) & (scenarios_df_compare["THERMAL"] == retrofit_new) & (scenarios_df_compare["VENT"] == vent_new)] = float(heat_comparazione_vent_updated.sum(axis = 0).values) / 365 * 100
         
         numeroTOT = round(heat_comparazione_vent_updated.sum(axis=0)[comparazione])
