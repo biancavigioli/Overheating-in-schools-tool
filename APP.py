@@ -219,6 +219,9 @@ def get_folder_key(base_folder, floor):
         return f"RISULTATI-base-{('Corner' if position == 'C' else 'Middle')}"
     return base_folder
 
+st.write("floor value:", floor)
+st.write("folder key:", get_folder_key("RISULTATI-base", floor))
+
 def get_file(folder, filename):
     folder_key = get_folder_key(folder, floor)  # floor is already defined from user input
     local_path = os.path.join(CACHE_DIR, folder_key, filename)
