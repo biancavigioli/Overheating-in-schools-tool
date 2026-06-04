@@ -221,7 +221,6 @@ def get_folder_key(base_folder, floor):
 
 st.write("floor value:", floor)
 st.write("folder key:", get_folder_key("RISULTATI-base", floor))
-st.write("URL:", f"{ZENODO_URLS['RISULTATI-base-Corner']}/Temperatures-{city}-{floor}.xlsx?download=1")
 
 def get_file(folder, filename):
     folder_key = get_folder_key(folder, floor)
@@ -229,6 +228,7 @@ def get_file(folder, filename):
     if not os.path.exists(local_path):
         os.makedirs(os.path.dirname(local_path), exist_ok=True)
         url = f"{ZENODO_URLS[folder_key]}/{filename}?download=1"
+        st.write(url)
         st.toast(f"Downloading {filename}...")
         r = requests.get(url, timeout=300, stream=True)
         if r.status_code != 200:
