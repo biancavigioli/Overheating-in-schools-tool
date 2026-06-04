@@ -1716,6 +1716,9 @@ st.pyplot(fig)
 #%% Additional passive strategies
 st.subheader("Additional passive strategies comparison", divider = True)
 st.write("Loading... \nEstimated time: 1 min")
+
+# If we are dealing with a corner position --> no results --> change to middle
+floor[2] = "M"
     
 # Comparison data frame
 inputsRetrofit = ["BASE", "Louvres 0°", "Louvres 45°", "Night ventilation"]
