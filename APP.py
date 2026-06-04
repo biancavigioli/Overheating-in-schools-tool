@@ -1475,8 +1475,8 @@ for comparazione_numero in range(number):
         Vent.loc[iniziale, "C3"] = float(scenarios_df_compare["C3_VENT"][(scenarios_df_compare["solar_heat_gain_coefficient"] == SHGC_new) & (
             scenarios_df_compare["THERMAL"] == retrofit_new) & (scenarios_df_compare["VENT"] == vent_new)].values)
     else:
-        st.write(scenarios_df_compare["C1"][(scenarios_df_compare["solar_heat_gain_coefficient"] == SHGC_new) & (
-            scenarios_df_compare["THERMAL"] == retrofit_new) & (scenarios_df_compare["VENT"] == vent_new)].values)
+        st.write(float(scenarios_df_compare["C1"][(scenarios_df_compare["solar_heat_gain_coefficient"] == SHGC_new) & (
+            scenarios_df_compare["THERMAL"] == retrofit_new) & (scenarios_df_compare["VENT"] == vent_new)].values))
         noVent.loc[iniziale, "C1"] = float(scenarios_df_compare["C1"][(scenarios_df_compare["solar_heat_gain_coefficient"] == SHGC_new) & (
             scenarios_df_compare["THERMAL"] == retrofit_new) & (scenarios_df_compare["VENT"] == vent_new)].values)
         noVent.loc[iniziale, "C2"] = float(scenarios_df_compare["C2"][(scenarios_df_compare["solar_heat_gain_coefficient"] == SHGC_new) & (
