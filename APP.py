@@ -219,9 +219,6 @@ def get_folder_key(base_folder, floor):
         return f"RISULTATI-base-{('Corner' if position == 'C' else 'Middle')}"
     return base_folder
 
-st.write("floor value:", floor)
-st.write("folder key:", get_folder_key("RISULTATI-base", floor))
-
 def get_file(folder, filename):
     folder_key = get_folder_key(folder, floor)
     local_path = os.path.join(CACHE_DIR, folder_key, filename)
@@ -1718,7 +1715,9 @@ st.subheader("Additional passive strategies comparison", divider = True)
 st.write("Loading... \nEstimated time: 1 min")
 
 # If we are dealing with a corner position --> no results --> change to middle
-floor[2] = "M"
+if floor.split("-")[1] == "C":
+    st.write("In this case, only base case configuration was run. To compare passive strategies, select the middle position classroom")
+    st.stop()
     
 # Comparison data frame
 inputsRetrofit = ["BASE", "Louvres 0°", "Louvres 45°", "Night ventilation"]
