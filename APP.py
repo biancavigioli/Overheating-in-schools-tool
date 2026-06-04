@@ -2474,6 +2474,10 @@ st.pyplot(fig)
 #%% Same thing with future weather and UHI
 st.subheader("Future weather and Urban Heat Island effects comparison", divider = True)
 st.write("Loading... \nEstimated time: 1 min")
+
+temp_df_sh00 = temp_df_2050
+temp_df_sh45 = temp_df_2080
+temp_df_night = temp_df_UHI
     
 # Comparison data frame
 inputsRetrofit = ["BASE", "2050", "2080", "UHI"]
