@@ -199,7 +199,7 @@ import requests
 
 # ── Zenodo settings ──────────────────────────────────────────────────────────
 ZENODO_URLS = {
-    "RISULTATI-base-Corner": "https://zenodo.org/records/20544543/files",
+    "RISULTATI-base-Corner": "https://zenodo.org/records/20383572/files",
     "RISULTATI-base-Middle": "https://zenodo.org/records/20383688/files",
     "RISULTATI-sh00":        "https://zenodo.org/records/20383414/files",
     "RISULTATI-sh45":        "https://zenodo.org/records/20383336/files",
