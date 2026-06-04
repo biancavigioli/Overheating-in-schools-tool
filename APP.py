@@ -221,6 +221,7 @@ def get_folder_key(base_folder, floor):
 
 st.write("floor value:", floor)
 st.write("folder key:", get_folder_key("RISULTATI-base", floor))
+st.write("URL:", f"{ZENODO_URLS['RISULTATI-base-Corner']}/Temperatures-{city}-{floor}.xlsx?download=1")
 
 def get_file(folder, filename):
     folder_key = get_folder_key(folder, floor)  # floor is already defined from user input
