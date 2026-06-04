@@ -224,18 +224,19 @@ st.write("folder key:", get_folder_key("RISULTATI-base", floor))
 st.write("URL:", f"{ZENODO_URLS['RISULTATI-base-Corner']}/Temperatures-{city}-{floor}.xlsx?download=1")
 
 def get_file(folder, filename):
-    folder_key = get_folder_key(folder, floor)  # floor is already defined from user input
+    folder_key = get_folder_key(folder, floor)
     local_path = os.path.join(CACHE_DIR, folder_key, filename)
     if not os.path.exists(local_path):
         os.makedirs(os.path.dirname(local_path), exist_ok=True)
         url = f"{ZENODO_URLS[folder_key]}/{filename}?download=1"
         st.toast(f"Downloading {filename}...")
-        r = requests.get(url, timeout=60)
+        r = requests.get(url, timeout=300, stream=True)
         if r.status_code != 200:
             st.error(f"Could not download {filename} (error {r.status_code}). Check your Zenodo record.")
             st.stop()
         with open(local_path, "wb") as f:
-            f.write(r.content)
+            for chunk in r.iter_content(chunk_size=8192):
+                f.write(chunk)
     return local_path
 
 
