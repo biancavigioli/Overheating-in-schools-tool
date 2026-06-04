@@ -247,30 +247,6 @@ temp_df_tot        = pd.read_excel(get_file("RISULTATI-base",  f"Temperatures-{c
 scenarios_df_tot   = pd.read_excel(get_file("RISULTATI-base",  f"Scenarios-{city}-{floor}.xlsx"))
 dist_df_tot        = pd.read_excel(get_file("RISULTATI-base",  f"Dist-{city}-{floor}.xlsx"))
 
-temp_df_sh00       = pd.read_excel(get_file("RISULTATI-sh00",  f"Temperatures-{city}-{floor}.xlsx"))
-scenarios_df_sh00  = pd.read_excel(get_file("RISULTATI-sh00",  f"Scenarios-{city}-{floor}.xlsx"))
-dist_df_sh00       = pd.read_excel(get_file("RISULTATI-sh00",  f"Dist-{city}-{floor}.xlsx"))
-
-temp_df_sh45       = pd.read_excel(get_file("RISULTATI-sh45",  f"Temperatures-{city}-{floor}.xlsx"))
-scenarios_df_sh45  = pd.read_excel(get_file("RISULTATI-sh45",  f"Scenarios-{city}-{floor}.xlsx"))
-dist_df_sh45       = pd.read_excel(get_file("RISULTATI-sh45",  f"Dist-{city}-{floor}.xlsx"))
-
-temp_df_night      = pd.read_excel(get_file("RISULTATI-night", f"Temperatures-{city}-{floor}.xlsx"))
-scenarios_df_night = pd.read_excel(get_file("RISULTATI-night", f"Scenarios-{city}-{floor}.xlsx"))
-dist_df_night      = pd.read_excel(get_file("RISULTATI-night", f"Dist-{city}-{floor}.xlsx"))
-
-temp_df_2050       = pd.read_excel(get_file("RISULTATI-2050", f"Temperatures-{city}-{floor}-2050.xlsx"))
-scenarios_df_2050  = pd.read_excel(get_file("RISULTATI-2050", f"Scenarios-{city}-{floor}-2050.xlsx"))
-dist_df_2050       = pd.read_excel(get_file("RISULTATI-2050", f"Dist-{city}-{floor}-2050.xlsx"))
-
-temp_df_2080       = pd.read_excel(get_file("RISULTATI-2080", f"Temperatures-{city}-{floor}-2080.xlsx"))
-scenarios_df_2080  = pd.read_excel(get_file("RISULTATI-2080", f"Scenarios-{city}-{floor}-2080.xlsx"))
-dist_df_2080       = pd.read_excel(get_file("RISULTATI-2080", f"Dist-{city}-{floor}-2080.xlsx"))
-
-temp_df_UHI        = pd.read_excel(get_file("RISULTATI-UHI",  f"Temperatures-{city}-{floor}-UHI.xlsx"))
-scenarios_df_UHI   = pd.read_excel(get_file("RISULTATI-UHI",  f"Scenarios-{city}-{floor}-UHI.xlsx"))
-dist_df_UHI        = pd.read_excel(get_file("RISULTATI-UHI",  f"Dist-{city}-{floor}-UHI.xlsx"))
-
 # ── Base data ────────────────────────────────────────────────────────────────
 temp_df_tot['ts'] = pd.Timestamp('2025-01-01 00:00:00') + pd.to_timedelta(temp_df_tot.index, unit='h')
 temp_df_tot["Month"] = temp_df_tot["ts"].dt.month
@@ -1783,6 +1759,10 @@ else:
     WFR = 22
 
 # Shading 00
+temp_df_sh00       = pd.read_excel(get_file("RISULTATI-sh00",  f"Temperatures-{city}-{floor}.xlsx"))
+scenarios_df_sh00  = pd.read_excel(get_file("RISULTATI-sh00",  f"Scenarios-{city}-{floor}.xlsx"))
+dist_df_sh00       = pd.read_excel(get_file("RISULTATI-sh00",  f"Dist-{city}-{floor}.xlsx"))
+
 temp_df_sh00['ts'] = pd.Timestamp('2025-01-01 00:00:00') + pd.to_timedelta(temp_df_sh00.index, unit='h')
 temp_df_sh00["Month"] = temp_df_sh00["ts"].dt.month
 temp_df_sh00["Day"] = temp_df_sh00["ts"].dt.day
@@ -1815,6 +1795,10 @@ elif "-{}, {}, {}, {}, {}.0, {}.0, {}".format(city, floor, vent, retrofit, WFR, 
 dist_df_compare = pd.concat([dist_df_compare, dist_df_sh00[dist_df_sh00["Unnamed: 0"] == casoDist]]) #, dist_df_sh00[dist_df_sh00["Unnamed: 0"] == "{} VENT".format(casoDist)]])
 
 # Shading 45
+temp_df_sh45       = pd.read_excel(get_file("RISULTATI-sh45",  f"Temperatures-{city}-{floor}.xlsx"))
+scenarios_df_sh45  = pd.read_excel(get_file("RISULTATI-sh45",  f"Scenarios-{city}-{floor}.xlsx"))
+dist_df_sh45       = pd.read_excel(get_file("RISULTATI-sh45",  f"Dist-{city}-{floor}.xlsx"))
+
 temp_df_sh45['ts'] = pd.Timestamp('2025-01-01 00:00:00') + pd.to_timedelta(temp_df_sh45.index, unit='h')
 temp_df_sh45["Month"] = temp_df_sh45["ts"].dt.month
 temp_df_sh45["Day"] = temp_df_sh45["ts"].dt.day
@@ -1847,6 +1831,10 @@ elif "-{}, {}, {}, {}, {}.0, {}.0, {}".format(city, floor, vent, retrofit, WFR, 
 dist_df_compare = pd.concat([dist_df_compare, dist_df_sh45[dist_df_sh45["Unnamed: 0"] == casoDist]]) #, dist_df_sh45[dist_df_sh45["Unnamed: 0"] == "{} VENT".format(casoDist)]])
 
 # Night vent
+temp_df_night      = pd.read_excel(get_file("RISULTATI-night", f"Temperatures-{city}-{floor}.xlsx"))
+scenarios_df_night = pd.read_excel(get_file("RISULTATI-night", f"Scenarios-{city}-{floor}.xlsx"))
+dist_df_night      = pd.read_excel(get_file("RISULTATI-night", f"Dist-{city}-{floor}.xlsx"))
+
 temp_df_night['ts'] = pd.Timestamp('2025-01-01 00:00:00') + pd.to_timedelta(temp_df_night.index, unit='h')
 temp_df_night["Month"] = temp_df_night["ts"].dt.month
 temp_df_night["Day"] = temp_df_night["ts"].dt.day
@@ -2480,6 +2468,18 @@ st.pyplot(fig)
 #%% Same thing with future weather and UHI
 st.subheader("Future weather and Urban Heat Island effects comparison", divider = True)
 st.write("Loading... \nEstimated time: 1 min")
+
+temp_df_2050       = pd.read_excel(get_file("RISULTATI-2050", f"Temperatures-{city}-{floor}-2050.xlsx"))
+scenarios_df_2050  = pd.read_excel(get_file("RISULTATI-2050", f"Scenarios-{city}-{floor}-2050.xlsx"))
+dist_df_2050       = pd.read_excel(get_file("RISULTATI-2050", f"Dist-{city}-{floor}-2050.xlsx"))
+
+temp_df_2080       = pd.read_excel(get_file("RISULTATI-2080", f"Temperatures-{city}-{floor}-2080.xlsx"))
+scenarios_df_2080  = pd.read_excel(get_file("RISULTATI-2080", f"Scenarios-{city}-{floor}-2080.xlsx"))
+dist_df_2080       = pd.read_excel(get_file("RISULTATI-2080", f"Dist-{city}-{floor}-2080.xlsx"))
+
+temp_df_UHI        = pd.read_excel(get_file("RISULTATI-UHI",  f"Temperatures-{city}-{floor}-UHI.xlsx"))
+scenarios_df_UHI   = pd.read_excel(get_file("RISULTATI-UHI",  f"Scenarios-{city}-{floor}-UHI.xlsx"))
+dist_df_UHI        = pd.read_excel(get_file("RISULTATI-UHI",  f"Dist-{city}-{floor}-UHI.xlsx"))
 
 temp_df_sh00 = temp_df_2050
 temp_df_sh45 = temp_df_2080
