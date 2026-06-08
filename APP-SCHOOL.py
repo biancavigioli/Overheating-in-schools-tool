@@ -856,19 +856,19 @@ ratio2 = heat_stress/heat_stress_tot
 # Aule
 rischio = pd.DataFrame(0, columns = ["comfort bands", "dist", "tm52", "heat stress", "finale", "rate"], index = range(number_of_types))
 
-rischio["comfort bands"].mask((comfort_bands['End of \nheating season - \nend of school'] > 5) | (comfort_bands['Start of school - \nstart of \nheating season'] > 5), 1, inplace=True)
-rischio["dist"].mask((ratio['school non heating'] > 0.05), 1, inplace=True)
-rischio["tm52"].mask((tm52['TOT'] == 100), 1, inplace=True)
-rischio["heat stress"].mask((ratio2['school non heating'] > 0.1), 1, inplace=True)
+rischio["comfort bands"] = rischio["comfort bands"].mask((comfort_bands['End of \nheating season - \nend of school'] > 5) | (comfort_bands['Start of school - \nstart of \nheating season'] > 5), 1)
+rischio["dist"] = rischio["dist"].mask((ratio['school non heating'] > 0.05), 1)
+rischio["tm52"] = rischio["tm52"].mask((tm52['TOT'] == 100), 1)
+rischio["heat stress"] = rischio["heat stress"].mask((ratio2['school non heating'] > 0.1), 1)
 
-rischio["finale"].mask((rischio["comfort bands"] == 1) | (rischio["dist"] == 1) & (rischio["tm52"] == 1) | (rischio["heat stress"] == 1), 0.5, inplace=True)
-rischio["finale"].mask((rischio["comfort bands"] == 1) & (rischio["dist"] == 1) & (rischio["tm52"] == 1) & (rischio["heat stress"] == 1), 1, inplace=True)
-rischio["finale"].mask((rischio["comfort bands"] == 1) & (rischio["dist"] == 0), 0.5, inplace=True)
-rischio["finale"].mask((rischio["tm52"] == 0), 0, inplace=True)
+rischio["finale"] = rischio["finale"].mask((rischio["comfort bands"] == 1) | (rischio["dist"] == 1) & (rischio["tm52"] == 1) | (rischio["heat stress"] == 1), 0.5)
+rischio["finale"] = rischio["finale"].mask((rischio["comfort bands"] == 1) & (rischio["dist"] == 1) & (rischio["tm52"] == 1) & (rischio["heat stress"] == 1), 1)
+rischio["finale"] = rischio["finale"].mask((rischio["comfort bands"] == 1) & (rischio["dist"] == 0), 0.5)
+rischio["finale"] = rischio["finale"].mask((rischio["tm52"] == 0), 0)
 
-rischio["rate"].mask(rischio["finale"] == 1, "high", inplace=True)
-rischio["rate"].mask(rischio["finale"] == 0.5, "middle", inplace=True)
-rischio["rate"].mask(rischio["finale"] == 0, "low", inplace=True)
+rischio["rate"] = rischio["rate"].mask(rischio["finale"] == 1, "high")
+rischio["rate"] = rischio["rate"].mask(rischio["finale"] == 0.5, "middle")
+rischio["rate"] = rischio["rate"].mask(rischio["finale"] == 0, "low")
 
 for gruppo in range(number_of_types):
     if rischio["rate"][gruppo] == "high":
@@ -902,19 +902,19 @@ else:
 # Aule
 rischio = pd.DataFrame(0, columns = ["comfort bands", "dist", "tm52", "heat stress", "finale", "rate"], index = range(number_of_types))
 
-rischio["comfort bands"].mask((comfort_bands["End - start \nof school"] > 5), 1, inplace=True)
-rischio["dist"].mask((ratio['non heating'] > 0.05), 1, inplace=True)
-rischio["tm52"].mask((tm52['TOT'] == 100), 1, inplace=True)
-rischio["heat stress"].mask((ratio2['total'] > 0.1), 1, inplace=True)
+rischio["comfort bands"] = rischio["comfort bands"].mask((comfort_bands["End - start \nof school"] > 5), 1)
+rischio["dist"] = rischio["dist"].mask((ratio['non heating'] > 0.05), 1)
+rischio["tm52"] = rischio["tm52"].mask((tm52['TOT'] == 100), 1)
+rischio["heat stress"] = rischio["heat stress"].mask((ratio2['total'] > 0.1), 1)
 
-rischio["finale"].mask((rischio["comfort bands"] == 1) | (rischio["dist"] == 1) & (rischio["tm52"] == 1) | (rischio["heat stress"] == 1), 0.5, inplace=True)
-rischio["finale"].mask((rischio["comfort bands"] == 1) & (rischio["dist"] == 1) & (rischio["tm52"] == 1) & (rischio["heat stress"] == 1), 1, inplace=True)
-rischio["finale"].mask((rischio["comfort bands"] == 1) & (rischio["dist"] == 0), 0.5, inplace=True)
-rischio["finale"].mask((rischio["tm52"] == 0), 0, inplace=True)
+rischio["finale"] = rischio["finale"].mask((rischio["comfort bands"] == 1) | (rischio["dist"] == 1) & (rischio["tm52"] == 1) | (rischio["heat stress"] == 1), 0.5)
+rischio["finale"] = rischio["finale"].mask((rischio["comfort bands"] == 1) & (rischio["dist"] == 1) & (rischio["tm52"] == 1) & (rischio["heat stress"] == 1), 1)
+rischio["finale"] = rischio["finale"].mask((rischio["comfort bands"] == 1) & (rischio["dist"] == 0), 0.5)
+rischio["finale"] = rischio["finale"].mask((rischio["tm52"] == 0), 0)
 
-rischio["rate"].mask(rischio["finale"] == 1, "high", inplace=True)
-rischio["rate"].mask(rischio["finale"] == 0.5, "middle", inplace=True)
-rischio["rate"].mask(rischio["finale"] == 0, "low", inplace=True)
+rischio["rate"] = rischio["rate"].mask(rischio["finale"] == 1, "high")
+rischio["rate"] = rischio["rate"].mask(rischio["finale"] == 0.5, "middle")
+rischio["rate"] = rischio["rate"].mask(rischio["finale"] == 0, "low")
 
 for gruppo in range(number_of_types):
     if rischio["rate"][gruppo] == "high":
