@@ -711,7 +711,7 @@ def numeri2(max_valRow, max_valCol, df, dftot, ax):
 def truefalse(max_valRow, max_valCol, df, ax):
     for j in range(max_valRow):
         for k in range(max_valCol):
-            ax.text(j, k, "No overheating" if tot["TOT"][k] == 0 else "Overheating", va='center', ha='center', fontsize=8)
+            ax.text(j, k, "No overheating" if tot["TOT"].iloc[k] == 0 else "Overheating", va='center', ha='center', fontsize=8)
             
 def wrap_labels(df, ax, width):
     labels = []
