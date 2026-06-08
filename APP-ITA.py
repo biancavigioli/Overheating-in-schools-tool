@@ -705,7 +705,7 @@ def numeri(max_valRow, max_valCol, df, ax):
     for j in range(max_valRow):
         for k in range(max_valCol):
             c = df[df.columns[j]][df.index[k]]
-            ax.text(j, k, "{}%".format(str(round(c, 2))),
+            ax.text(j, k, "{}%".format(str(round(c, 1))),
                      va='center', ha='center', fontsize=12)
 
 def truefalse(max_valRow, max_valCol, df, ax):
@@ -1483,7 +1483,7 @@ min_val, max_valCol = 0, number
 for j in range(max_valRow):
     for k in range(max_valCol):
         c = df[criteri.columns[j]][criteri.index[k]]
-        ax1.text(j, k, "{}%".format(str(round(c, 2))), va='center', ha='center', fontsize=10)
+        ax1.text(j, k, "{}%".format(str(round(c, 1))), va='center', ha='center', fontsize=10)
 
 tot = pd.DataFrame(df["TOT"])
 tot = tot.astype(float)    
@@ -2244,7 +2244,7 @@ min_val, max_valCol = 0, number
 for j in range(max_valRow):
     for k in range(max_valCol):
         c = df[criteri.columns[j]][criteri.index[k]]
-        ax1.text(j, k, "{}%".format(str(round(c, 2))), va='center', ha='center', fontsize=10)
+        ax1.text(j, k, "{}%".format(str(round(c, 1))), va='center', ha='center', fontsize=10)
 
 tot = pd.DataFrame(df["TOT"])
 tot = tot.astype(float)    
@@ -2982,7 +2982,7 @@ min_val, max_valCol = 0, number
 for j in range(max_valRow):
     for k in range(max_valCol):
         c = df[criteri.columns[j]][criteri.index[k]]
-        ax1.text(j, k, "{}%".format(str(round(c, 2))), va='center', ha='center', fontsize=10)
+        ax1.text(j, k, "{}%".format(str(round(c, 1))), va='center', ha='center', fontsize=10)
 
 tot = pd.DataFrame(df["TOT"])
 tot = tot.astype(float)    

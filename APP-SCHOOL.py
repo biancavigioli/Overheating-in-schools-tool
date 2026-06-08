@@ -698,7 +698,7 @@ def numeri(max_valRow, max_valCol, df, ax):
     for j in range(max_valRow):
         for k in range(max_valCol):
             c = df[df.columns[j]][df.index[k]]
-            ax.text(j, k, "{}%".format(str(round(c, 2))),
+            ax.text(j, k, "{}%".format(str(round(c, 1))),
                      va='center', ha='center', fontsize=12)
 
 def numeri2(max_valRow, max_valCol, df, dftot, ax):
