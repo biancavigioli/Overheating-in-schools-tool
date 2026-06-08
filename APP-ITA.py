@@ -225,7 +225,6 @@ def get_file(folder, filename):
         url = f"{ZENODO_URLS[folder_key]}/{filename}?download=1"
         st.toast(f"Downloading {filename}...")
         r = requests.get(url, timeout=300, stream=True)
-        st.write(f"Status code: {r.status_code}")
         if r.status_code != 200:
             st.error(f"Could not download {filename} (error {r.status_code}). Check your Zenodo record.")
             st.stop()
