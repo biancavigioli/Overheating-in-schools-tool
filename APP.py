@@ -564,7 +564,7 @@ fig.set_figwidth(9)
 bins = dist_df[dist_df["Unnamed: 0"] == "bins"].drop(columns=["Unnamed: 0"]).values.flatten()
 new_bins = [x+33 for x in bins]
 
-ax1.plot(dist_df[dist_df["Unnamed: 0"] == "bins"].drop(columns=["Unnamed: 0"]).values.flatten(), dist_df[dist_df["Unnamed: 0"] == casoDist].drop(columns=["Unnamed: 0"]).values.flatten()*100, label="Zero air speed", color=red[24])
+ax1.plot(dist_df[dist_df["Unnamed: 0"] == "bins"].drop(columns=["Unnamed: 0"]).values.flatten(), dist_df[dist_df["Unnamed: 0"] == casoDist].drop(columns=["Unnamed: 0"]).values.flatten()*100, label="Not increased air speed", color=red[24])
 ax1.axvspan(2, 9, alpha = 0.3, color = red[24], label = "Seriously unacceptable")
 ax1.axhspan(95, 100, xmin = 0, xmax = 2/9, alpha = 0.3, color=green[24], label = "Negligibly unacceptable")
 ax1.plot(dist_df[dist_df["Unnamed: 0"] == "bins"].drop(columns=["Unnamed: 0"]).values.flatten(), dist_df[dist_df["Unnamed: 0"] == "{} VENT".format(casoDist)].drop(columns=["Unnamed: 0"]).values.flatten()*100, label="Increased air speed", color=blue[24])
@@ -645,11 +645,11 @@ seiVent = round(counts2.sum())
 setteVent = round(counts4.sum()-counts4[0]-counts4[1]-counts4[2])
 ottoVent = round(counts4.sum())
 
-df_metrics = pd.DataFrame(columns = ["Non heating period", "Non heating school period"], index = ["Zero air speed", "Increased air speed"], data = [[uno, tre], [unoVent, treVent]])
-df_metrics_tot = pd.DataFrame(columns = ["Non heating period", "Non heating school period"], index = ["Zero air speed", "Increased air speed"], data = [[due, quattro], [dueVent, quattroVent]])
+df_metrics = pd.DataFrame(columns = ["Non heating period", "Non heating school period"], index = ["Not increased air speed", "Increased air speed"], data = [[uno, tre], [unoVent, treVent]])
+df_metrics_tot = pd.DataFrame(columns = ["Non heating period", "Non heating school period"], index = ["Not increased air speed", "Increased air speed"], data = [[due, quattro], [dueVent, quattroVent]])
   
-df_metrics2 = pd.DataFrame(columns = ["Non heating period", "Non heating school period"], index = ["Zero air speed", "Increased air speed"], data = [[cinque, sette], [cinqueVent, setteVent]])
-df_metrics_tot2 = pd.DataFrame(columns = ["Non heating period", "Non heating school period"], index = ["Zero air speed", "Increased air speed"], data = [[sei, otto], [seiVent, ottoVent]])
+df_metrics2 = pd.DataFrame(columns = ["Non heating period", "Non heating school period"], index = ["Not increased air speed", "Increased air speed"], data = [[cinque, sette], [cinqueVent, setteVent]])
+df_metrics_tot2 = pd.DataFrame(columns = ["Non heating period", "Non heating school period"], index = ["Not increased air speed", "Increased air speed"], data = [[sei, otto], [seiVent, ottoVent]])
 
 df_metrics = df_metrics.astype(float)
 df_metrics_tot = df_metrics_tot.astype(float)
@@ -735,7 +735,7 @@ noVent = pd.concat([scenarios_df["C1"], scenarios_df["C2"], scenarios_df["C3"]],
 Vent = pd.concat([scenarios_df["C1_VENT"], scenarios_df["C2_VENT"], scenarios_df["C3_VENT"]], axis=1)
 Vent.columns = ["C1", "C2", "C3"]
 df = pd.concat([noVent, Vent])
-df.index = ["Zero air speed", "Increased air speed"]
+df.index = ["Not increased air speed", "Increased air speed"]
 df["TOT"] = 100
 df.loc[(df["C1"] == 0) | (df["C2"] == 0) | (df["C3"] == 0), "TOT"] = 0
 
@@ -1462,7 +1462,7 @@ for comparazione_numero in range(number):
             scenarios_df_compare["THERMAL"] == retrofit_new) & (scenarios_df_compare["VENT"] == vent_new)].values[0])
 
     df = pd.concat([noVent, Vent])
-    # df.index = ["Zero air speed", "Increased air speed"]
+    # df.index = ["Not increased air speed", "Increased air speed"]
     df["TOT"] = 100
     df.loc[(df["C1"] == 0) | (df["C2"] == 0) | (df["C3"] == 0), "TOT"] = 0
     df = df.astype('float64')
@@ -1711,14 +1711,15 @@ st.pyplot(fig)
 
 
 #%% Additional passive strategies
-st.subheader("Additional passive strategies comparison", divider = True)
-st.write("Loading... \nEstimated time: 1 min")
 
 # If we are dealing with a corner position --> no results --> change to middle
 if floor.split("-")[1] == "C":
-    st.write("In this case, only base case configuration was run. To compare passive strategies, select the middle position classroom")
+    st.write("For the corner classrooms, only base case configuration was run. To compare passive strategies, select the middle position classroom")
     st.stop()
     
+st.subheader("Additional passive strategies comparison", divider = True)
+st.write("Loading... \nEstimated time: 1 min")
+
 # Comparison data frame
 inputsRetrofit = ["BASE", "Louvres 0°", "Louvres 45°", "Night ventilation"]
 
@@ -2226,7 +2227,7 @@ for comparazione_numero in range(number):
     noVent.loc[iniziale, "C3"] = float(scenarios_df_compare["C3"][(scenarios_df_compare["Caso"] == comparazione)].values[0])
 
     df = pd.concat([noVent, Vent])
-    # df.index = ["Zero air speed", "Increased air speed"]
+    # df.index = ["Not increased air speed", "Increased air speed"]
     df["TOT"] = 100
     df.loc[(df["C1"] == 0) | (df["C2"] == 0) | (df["C3"] == 0), "TOT"] = 0
     df = df.astype('float64')
@@ -2964,7 +2965,7 @@ for comparazione_numero in range(number):
     noVent.loc[iniziale, "C3"] = float(scenarios_df_compare["C3"][(scenarios_df_compare["Caso"] == comparazione)].values[0])
 
     df = pd.concat([noVent, Vent])
-    # df.index = ["Zero air speed", "Increased air speed"]
+    # df.index = ["Not increased air speed", "Increased air speed"]
     df["TOT"] = 100
     df.loc[(df["C1"] == 0) | (df["C2"] == 0) | (df["C3"] == 0), "TOT"] = 0
     df = df.astype('float64')

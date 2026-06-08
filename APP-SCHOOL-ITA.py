@@ -421,6 +421,49 @@ for gruppo in range(number_of_types):
 st.subheader("Caricamento dei dati", divider = True)
 st.write("Tempo stimato: {} min {} sec".format(math.floor(number_of_types*20/60), round(number_of_types*20%60)))
 
+import requests
+
+# ── Zenodo settings ──────────────────────────────────────────────────────────
+ZENODO_URLS = {
+    "RISULTATI-base-Corner": "https://zenodo.org/records/20383573/files",
+    "RISULTATI-base-Middle": "https://zenodo.org/records/20383688/files",
+    "RISULTATI-sh00":        "https://zenodo.org/records/20383414/files",
+    "RISULTATI-sh45":        "https://zenodo.org/records/20383336/files",
+    "RISULTATI-night":       "https://zenodo.org/records/20383208/files",
+    "RISULTATI-2050":        "https://zenodo.org/records/20383515/files",
+    "RISULTATI-2080":        "https://zenodo.org/records/20383503/files",
+    "RISULTATI-UHI":         "https://zenodo.org/records/20383533/files",
+}
+
+CACHE_DIR = os.path.join(os.path.expanduser("~"), ".streamlit_cache", "scuole_results")
+os.makedirs(CACHE_DIR, exist_ok=True)
+
+def get_folder_key(base_folder, floor):
+    """For RISULTATI-base, pick Corner or Middle record based on floor position."""
+    if base_folder == "RISULTATI-base":
+        position = floor.split("-")[1]  # extracts "C" or "M" from e.g. "G-C"
+        return f"RISULTATI-base-{('Corner' if position == 'C' else 'Middle')}"
+    return base_folder
+
+def get_file(folder, filename):
+    folder_key = get_folder_key(folder, floor)
+    local_path = os.path.join(CACHE_DIR, folder_key, filename)
+    if not os.path.exists(local_path):
+        os.makedirs(os.path.dirname(local_path), exist_ok=True)
+        url = f"{ZENODO_URLS[folder_key]}/{filename}?download=1"
+        st.write(url)
+        st.toast(f"Downloading {filename}...")
+        r = requests.get(url, timeout=300, stream=True)
+        st.write(f"Status code: {r.status_code}")
+        if r.status_code != 200:
+            st.error(f"Could not download {filename} (error {r.status_code}). Check your Zenodo record.")
+            st.stop()
+        with open(local_path, "wb") as f:
+            for chunk in r.iter_content(chunk_size=8192):
+                f.write(chunk)
+    return local_path
+
+
 for gruppo in range(number_of_types):
     floor = numero_df["floor"][gruppo]
     orient = numero_df["orient"][gruppo] 
@@ -434,9 +477,11 @@ for gruppo in range(number_of_types):
     st.write("Caricamento dei dati - Gruppo di aule {}...".format(gruppo+1))
     
     # Folder
-    folder = os.path.dirname(os.path.abspath(sys.argv[0]))
+    folder = "local"  # kept as a placeholder, no longer used for paths
+    temp_df_tot        = pd.read_excel(get_file("RISULTATI-base",  f"Temperatures-{city}-{floor}.xlsx"))
+    scenarios_df_tot   = pd.read_excel(get_file("RISULTATI-base",  f"Scenarios-{city}-{floor}.xlsx"))
+    dist_df_tot        = pd.read_excel(get_file("RISULTATI-base",  f"Dist-{city}-{floor}.xlsx"))
     
-    temp_df_tot = pd.read_excel(folder + r"\RISULTATI-base\Temperatures-{}-{}.xlsx".format(city, floor))
     temp_df_tot['ts'] = pd.Timestamp('2025-01-01 00:00:00') + pd.to_timedelta(temp_df_tot.index, unit='h')
     temp_df_tot["Month"] = temp_df_tot["ts"].dt.month
     temp_df_tot["Day"] = temp_df_tot["ts"].dt.day
@@ -455,10 +500,7 @@ for gruppo in range(number_of_types):
     
     temp_df = pd.concat([temp_df_tot[caso], temp_df_tot["Trm-{}".format(city)], temp_df_tot["Tmax-{}".format(city)], temp_df_tot["TmaxVent-{}".format(city)], temp_df_tot["Tout-{}".format(city)], temp_df_tot["Month"], temp_df_tot["Day"], temp_df_tot["Day"], temp_df_tot["Weekday"], temp_df_tot["Hour"]], axis=1)
     
-    scenarios_df_tot = pd.read_excel(folder + r"\RISULTATI-base\Scenarios-{}-{}.xlsx".format(city, floor))
     scenarios_df = scenarios_df_tot[(scenarios_df_tot["window_to_floor_ratio"] == WFR/100) & (scenarios_df_tot["building_orientation"] == orient) & (scenarios_df_tot["solar_heat_gain_coefficient"] == SHGC) & (scenarios_df_tot["THERMAL"] == retrofit) & (scenarios_df_tot["VENT"] == vent)]
-    
-    dist_df_tot = pd.read_excel(folder + r"\RISULTATI-base\Dist-{}-{}.xlsx".format(city, floor))
     
     if "-{}, {}, {}, {}, {}, {}, {}".format(city, floor, vent, retrofit, WFR, orient, SHGC) in dist_df_tot["Unnamed: 0"].values:
         casoDist = "-{}, {}, {}, {}, {}, {}, {}".format(city, floor, vent, retrofit, WFR, orient, SHGC)
