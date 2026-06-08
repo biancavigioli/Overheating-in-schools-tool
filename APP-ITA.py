@@ -240,7 +240,6 @@ scenarios_df_tot   = pd.read_excel(get_file("RISULTATI-base",  f"Scenarios-{city
 dist_df_tot        = pd.read_excel(get_file("RISULTATI-base",  f"Dist-{city}-{floor}.xlsx"))
 
 # ── Base data ────────────────────────────────────────────────────────────────
-temp_df_tot = pd.read_excel(folder + r"\RISULTATI-base\Temperatures-{}-{}.xlsx".format(city, floor))
 temp_df_tot['ts'] = pd.Timestamp('2025-01-01 00:00:00') + pd.to_timedelta(temp_df_tot.index, unit='h')
 temp_df_tot["Month"] = temp_df_tot["ts"].dt.month
 temp_df_tot["Day"] = temp_df_tot["ts"].dt.day
@@ -260,10 +259,7 @@ elif "-{}, {}, {}, {}, {}.0, {}.0, {}".format(city, floor, vent, retrofit, WFR, 
 
 temp_df = pd.concat([temp_df_tot[caso], temp_df_tot["Trm-{}".format(city)], temp_df_tot["Tmax-{}".format(city)], temp_df_tot["TmaxVent-{}".format(city)], temp_df_tot["Tout-{}".format(city)], temp_df_tot["Month"], temp_df_tot["Day"], temp_df_tot["Day"], temp_df_tot["Weekday"], temp_df_tot["Hour"]], axis=1)
 
-scenarios_df_tot = pd.read_excel(folder + r"\RISULTATI-base\Scenarios-{}-{}.xlsx".format(city, floor))
 scenarios_df = scenarios_df_tot[(scenarios_df_tot["window_to_floor_ratio"] == WFR/100) & (scenarios_df_tot["building_orientation"] == orient) & (scenarios_df_tot["solar_heat_gain_coefficient"] == SHGC) & (scenarios_df_tot["THERMAL"] == retrofit) & (scenarios_df_tot["VENT"] == vent)]
-
-dist_df_tot = pd.read_excel(folder + r"\RISULTATI-base\Dist-{}-{}.xlsx".format(city, floor))
 
 if "-{}, {}, {}, {}, {}, {}, {}".format(city, floor, vent, retrofit, WFR, orient, SHGC) in dist_df_tot["Unnamed: 0"].values:
     casoDist = "-{}, {}, {}, {}, {}, {}, {}".format(city, floor, vent, retrofit, WFR, orient, SHGC)
