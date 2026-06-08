@@ -853,6 +853,8 @@ ratio = distribution2/tot2
 ratio2 = heat_stress/heat_stress_tot
 
 # Stagioni intermedie
+st.subheader("\nIntermediate seasons", divider = True)
+
 # Aule
 rischio = pd.DataFrame(0, columns = ["comfort bands", "dist", "tm52", "heat stress", "finale", "rate"], index = range(number_of_types))
 
@@ -892,13 +894,15 @@ else:
     rischioTOT = "low"
 
 if rischioTOT == "high":
-    st.subheader("The school is considered to be at :red[high] overheating risk in the intermediate seasons")
+    st.write("**The school is considered to be at :red[high] overheating risk in the intermediate seasons**")
 elif rischioTOT == "low":
-    st.subheader("The school is considered to be at :green[low] overheating risk in the intermediate seasons")
+    st.write("**The school is considered to be at :green[low] overheating risk in the intermediate seasons**")
 else:
-    st.subheader("The school is considered to be at :yellow[middle] overheating risk in the intermediate seasons")
+    st.write("**The school is considered to be at :yellow[middle] overheating risk in the intermediate seasons**")
     
 # Estate
+st.subheader("\nSummer season", divider = True)
+
 # Aule
 rischio = pd.DataFrame(0, columns = ["comfort bands", "dist", "tm52", "heat stress", "finale", "rate"], index = range(number_of_types))
 
@@ -940,11 +944,11 @@ else:
     rischioTOT = "high"
 
 if rischioTOT == "high":
-    st.subheader("The school is considered to be at :red[high] overheating risk and cannot be used in the summer season")
+    st.write("**The school is considered to be at :red[high] overheating risk and cannot be used in the summer season**")
 elif rischioTOT == "low":
-    st.subheader("The school is considered to be at :green[low] overheating risk and can be used with an acceptable comfort condition for sporadic use in the summer season")
+    st.write("**The school is considered to be at :green[low] overheating risk and can be used with an acceptable comfort condition for sporadic use in the summer season**")
 else:
-    st.subheader("The school is considered to be at :yellow[middle] overheating risk and can be used discontinuously with low attendance in the summer season")
+    st.write("**The school is considered to be at :yellow[middle] overheating risk and can be used discontinuously with low attendance in the summer season**")
     
 
 st.write("To compare various improvement possibilities for the overheating of the different classroom groups, use the classroom tool")

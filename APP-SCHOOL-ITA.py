@@ -854,6 +854,8 @@ ratio = distribution2/tot2
 ratio2 = heat_stress/heat_stress_tot
 
 # Stagioni intermedie
+st.subheader("\nStagioni intermedie", divider = True)
+
 # Aule
 rischio = pd.DataFrame(0, columns = ["comfort bands", "dist", "tm52", "heat stress", "finale", "rate"], index = range(number_of_types))
       
@@ -893,13 +895,15 @@ else:
     rischioTOT = "basso"
 
 if rischioTOT == "alto":
-    st.subheader("La scuola è esposta a rischio :red[alto] di overheating nelle stagioni intermedie")
+    st.write("**La scuola è esposta a rischio :red[alto] di overheating nelle stagioni intermedie**")
 elif rischioTOT == "basso":
-    st.subheader("La scuola è esposta a rischio :green[basso] di overheating nelle stagioni intermedie")
+    st.write("**La scuola è esposta a rischio :green[basso] di overheating nelle stagioni intermedie**")
 else:
-    st.subheader("La scuola è esposta a rischio :yellow[medio] di overheating nelle stagioni intermedie")
+    st.write("**La scuola è esposta a rischio :yellow[medio] di overheating nelle stagioni intermedie**")
     
 # Estate
+st.subheader("\nStagione estiva", divider = True)
+
 # Aule
 rischio = pd.DataFrame(0, columns = ["comfort bands", "dist", "tm52", "heat stress", "finale", "rate"], index = range(number_of_types))
 
@@ -941,11 +945,11 @@ else:
     rischioTOT = "alto"
 
 if rischioTOT == "alto":
-    st.subheader("La scuola è esposta a rischio :red[alto] di overheating e non può essere usata in estate")
+    st.write("**La scuola è esposta a rischio :red[alto] di overheating e non può essere usata in estate**")
 elif rischioTOT == "basso":
-    st.subheader("La scuola è esposta a rischio :green[basso] di overheating e può essere usata con un livello accettabile di comfort per uso sporadico in estate")
+    st.write("**La scuola è esposta a rischio :green[basso] di overheating e può essere usata con un livello accettabile di comfort per uso sporadico in estate**")
 else:
-    st.subheader("La scuola è esposta a rischio :yellow[medio] di overheating e può essere usata in modo discontinuo con bassa affluenza in estate")
+    st.write("**La scuola è esposta a rischio :yellow[medio] di overheating e può essere usata in modo discontinuo con bassa affluenza in estate**")
     
 
 st.write("Per comparare diverse possibilità di mitigazione della condizione dei diversi gruppi di aule, utilizzare il tool per le aule")
